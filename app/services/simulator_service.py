@@ -34,7 +34,7 @@ async def get_dataref(dataref: str):
 
 async def set_dataref(dataref: str, value: float):
     try:
-        response = httpx.put(
+        response = httpx.post(
             f"{XPLANE_HOST}/datarefs",
             json={"dataref": dataref, "value": value},
             timeout=5.0
