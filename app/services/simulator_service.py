@@ -1,7 +1,7 @@
 import os
 import httpx
 
-XPLANE_HOST = os.getenv("XPLANE_HOST", "http://localhost:8086/api/v1")
+XPLANE_HOST = os.getenv("XPLANE_HOST", "http://localhost:8086/api/v2")
 
 
 def handle_xplane_error(response: httpx.Response):
@@ -24,13 +24,14 @@ async def get_dataref(dataref: str):
         if error:
             return error
 
-        values = response.json().get("data", [])
-        if not values:
-            return {"status": "error", "detail": f"{dataref} not found"}
+        # values = response.json().get("data", [])
+        # if not values:
+        #     return {"status": "error", "detail": f"{dataref} not found"}
 
-        return {"status": "ok", "value": values[0].get("value")}
+        return {"status": "ok", "value": response.text}
     except Exception as e:
         return {"status": "error", "detail": str(e)}
+
 
 async def set_dataref(dataref: str, value: float):
     try:
@@ -65,10 +66,3 @@ async def get_parking_brake():
 async def set_parking_brake(value: float):
     return await set_dataref("sim/flightmodel/controls/parkbrake", value)
 
-
-async def get_wing_sweep():
-    return await get_dataref("sim/cockpit2/controls/wing_sweep_ratio")
-
-
-async def set_wing_sweep(value: float):
-    return await set_dataref("sim/cockpit2/controls/wing_sweep_ratio", value)

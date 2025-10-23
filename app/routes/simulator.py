@@ -15,19 +15,10 @@ async def set_flaps(value: float = Query(..., ge=0.0, le=1.0)):
 
 @router.get("/parking_brake")
 async def get_parking_brake():
-    return await simulator_service.get_parking_brake_ratio()
+    return await simulator_service.get_parking_brake()
 
 
 @router.post("/parking_brake")
 async def post_parking_brake(value: float = Query(..., ge=0.0, le=1.0)):
-    return await simulator_service.set_parking_brake_ratio(value)
+    return await simulator_service.set_parking_brake(value)
 
-
-@router.get("/gear")
-async def get_gear_handle():
-    return await simulator_service.get_gear_handle_down()
-
-
-@router.post("/gear")
-async def post_gear_handle(value: float = Query(..., ge=0.0, le=1.0)):
-    return await simulator_service.set_gear_handle_down(value)
