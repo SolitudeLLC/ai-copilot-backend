@@ -1,7 +1,7 @@
 import os
 import httpx
 
-XPLANE_HOST = os.getenv("XPLANE_HOST", "http://localhost:8086/api/v2")
+XPLANE_HOST = os.getenv("XPLANE_HOST", "http://localhost:8086/api/v1")
 
 
 def handle_xplane_error(response: httpx.Response):
@@ -24,14 +24,13 @@ async def get_dataref(dataref: str):
         if error:
             return error
 
-        # values = response.json().get("data", [])
-        # if not values:
-        #     return {"status": "error", "detail": f"{dataref} not found"}
+        values = response.json().get("data", [])
+        if not values:
+            return {"status": "error", "detail": f"{dataref} not found"}
 
-        return {"status": "ok", "value": response.text}
+        return {"status": "ok", "value": values[0].get("value")}
     except Exception as e:
         return {"status": "error", "detail": str(e)}
-
 
 async def set_dataref(dataref: str, value: float):
     try:
@@ -52,7 +51,7 @@ async def set_dataref(dataref: str, value: float):
 # === HIGH-LEVEL HELPERS ===
 
 async def get_flap_ratio():
-    return await get_dataref("sim/cockpit2/controls/flap_ratio")
+    return await get_dataref("sim/cockpit2/controls/flap_ratio") 
 
 
 async def set_flap_ratio(value: float):
@@ -65,4 +64,5 @@ async def get_parking_brake():
 
 async def set_parking_brake(value: float):
     return await set_dataref("sim/flightmodel/controls/parkbrake", value)
+
 

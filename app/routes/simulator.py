@@ -8,7 +8,7 @@ router = APIRouter(prefix="/simulator", tags=["Simulator"])
 async def get_flaps():
     return await simulator_service.get_flap_ratio()
 
-@router.post("/flaps")
+@router.patch("/flaps")
 async def set_flaps(value: float = Query(..., ge=0.0, le=1.0)):
     return await simulator_service.set_flap_ratio(value)
 
